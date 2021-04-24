@@ -4,10 +4,16 @@ const mysql = require('mysql');
 const handlebars = require('express-handlebars');
 const app = express();
 
+//Template engine
+app.engine("handlebars", handlebars({defaultLayout:'main'}));
+app.set('view engine', 'handlebars');
+
+
 //Routes and Templates
 app.get("/", function (req, res){
     //res.send("Essa é minha página inicial"); //Enviar String
-    res.sendFile(__dirname + "/index.html"); //Enviar arquivo
+    //res.sendFile(__dirname + "/index.html"); //Enviar arquivo
+    res.render('index');
 
 });
 
