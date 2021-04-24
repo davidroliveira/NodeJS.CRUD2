@@ -10,11 +10,14 @@ app.set('view engine', 'handlebars');
 
 
 //Routes and Templates
-app.get("/", function (req, res){
+app.get("/:id?", function (req, res){ //o sinal de "?" significa que parametro no é opcional
     //res.send("Essa é minha página inicial"); //Enviar String
     //res.sendFile(__dirname + "/index.html"); //Enviar arquivo
-    res.render('index');
+    //res.render('index');
 
+    //Pegar valor do parametro
+    //http://localhost:3000/37 -> Parâmetro 37
+    console.log(req.params.id);
 });
 
 
