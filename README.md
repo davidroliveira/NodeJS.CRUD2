@@ -8,12 +8,12 @@ NodeJS.CRUD2
 #Instalando modulos NodeJS:
 cd E:\Projetos\NodeJS.CRUD>
 
-npm install --save express
-npm install --save nodemon /*se der erro, usar instalação global: npm install -g nodemon*/
-npm install --save mysql
-npm install --save body-parser
-npm install --save express-handlebars
+E:\Projetos\NodeJS.CRUD>npm install --save express
+E:\Projetos\NodeJS.CRUD>npm install --save nodemon /*se der erro, usar instalação global: npm install -g nodemon*/
+E:\Projetos\NodeJS.CRUD>npm install --save mysql
+E:\Projetos\NodeJS.CRUD>npm install --save body-parser
+E:\Projetos\NodeJS.CRUD>npm install --save express-handlebars
 
 
 #Comando Nome
-nodemon app.js
+E:\Projetos\NodeJS.CRUD>nodemon app.js
