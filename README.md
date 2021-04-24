@@ -1,11 +1,9 @@
 # NodeJS.CRUD2
 NodeJS.CRUD2
 
-#Instalar NodeJS:
-https://nodejs.org/en/
+#Instalar NodeJS: https://nodejs.org/en/
 
-#Instalar MySQL:
-https://dev.mysql.com/downloads/
+#Instalar MySQL: https://dev.mysql.com/downloads/
 
 #Instalando modulos NodeJS:
 cd E:\Projetos\NodeJS.CRUD>
