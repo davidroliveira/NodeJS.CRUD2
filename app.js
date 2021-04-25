@@ -16,6 +16,7 @@ const sql=mysql.createPool({
     //port:3306
 });
 
+let port = process.env.port || 3000; //Porta de produção ou porta 3000 padrão do nodejs;
 
 //sql.query("use nodejs",function(error, results, fields){ //use database //usando o mysql.createConnection
 //    if (error) console.log(error.message); //throw error;
@@ -137,6 +138,6 @@ app.post("/controllerUpdate", urlencodeParser, function(req,res){
 });
 
 //start server
-app.listen(3000, function(req, res) {
+app.listen(port, function(req, res) {
     console.log('Servidor esta rodando!');
 });
