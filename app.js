@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const handlebars = require('express-handlebars');
+const { urlencoded } = require('body-parser');
 const app = express();
 const urlencodeParser=bodyParser.urlencoded({extended:false});
 const sql=mysql.createConnection({
@@ -74,7 +75,7 @@ app.get("/select/:id?", function(req, res){
 app.post("/controllerForm", urlencodeParser, function(req, res){
     //res.render("inserir");
     //console.log(req.body.name);
-    console.log([req.body.id, req.body.name, req.body.age]);
+    //console.log([req.body.id, req.body.name, req.body.age]);
     sql.query('insert into user values(?,?,?)',[req.body.id, req.body.name, req.body.age],function(error, results, fields){
         if (error) console.log(error.message); //throw error;
     } );
@@ -83,6 +84,19 @@ app.post("/controllerForm", urlencodeParser, function(req, res){
 app.get('/deletar/:id', function(req, res){
     sql.query("delete from user where id=?",[req.params.id]);
     res.render("deletar");
+});
+
+app.get("/update/:id", function(req,res){
+    sql.query("select * from user where id=?", [req.params.id], function(error, results, fields){
+        //console.log({id:results[0].id,name:results[0].name,age:results[0].age});
+        res.render("update",{id:results[0].id,name:results[0].name,age:results[0].age});        
+    });
+});
+
+app.post("/controllerUpdate", urlencodeParser, function(req,res){
+    //console.log([req.body.name, req.body.age, req.body.id]);
+    sql.query("update user set name=?, age=? where id=?",[req.body.name, req.body.age, req.body.id]);
+    res.render("controllerUpdate");
 });
 
 //start server
