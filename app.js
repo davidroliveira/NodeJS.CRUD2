@@ -23,9 +23,11 @@ app.engine("handlebars", handlebars({defaultLayout:'main'}));
 app.set('view engine', 'handlebars');
 
 //Rotas (estaticas) para diretorio com app.use
-//app.use('/css',express.static('css'));//rota (estatica) para diretorio css
-//app.use('/js',express.static('js'));//rota (estatica) para diretorio js
+app.use('/css',express.static('css'));//rota (estatica) para diretorio css
+app.use('/js',express.static('js'));//rota (estatica) para diretorio js
+app.use('/img',express.static('img'));//rota (estatica) para diretorio js
 
+/*
 //Rotas (estaticas) por arquivo
 app.get("/javascript", function(req, res){
   res.sendFile(__dirname + '/js/javascript.js');
@@ -34,6 +36,7 @@ app.get("/javascript", function(req, res){
 app.get("/style", function(req, res){
     res.sendFile(__dirname + '/css/style.css');
 });
+*/
 
 //Routes and Templates
 //app.get("/:id?", function (req, res){ //o sinal de "?" significa que parametro no é opcional
@@ -52,6 +55,20 @@ app.get("/", function (req, res){
 
 app.get("/inserir", function(req, res){
     res.render("inserir");
+})
+
+app.get("/select/:id?", function(req, res){
+    if (!req.params.id) {
+        //res.send("Exite");
+        sql.query("select * from user order by name", function(error, results, fields){
+            res.render("select", {data:results});
+        });
+    } else {
+        sql.query("select * from user where id=? order by name",[req.params.id], function(error, results, fields){
+            res.render("select", {data:results});
+        });
+    }
+    //res.render("select");
 })
 
 app.post("/controllerForm", urlencodeParser, function(req, res){
