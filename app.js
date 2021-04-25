@@ -80,6 +80,10 @@ app.post("/controllerForm", urlencodeParser, function(req, res){
     } );
     res.render("controllerForm");
 })
+app.get('/deletar/:id', function(req, res){
+    sql.query("delete from user where id=?",[req.params.id]);
+    res.render("deletar");
+});
 
 //start server
 app.listen(3000, function(req, res) {
