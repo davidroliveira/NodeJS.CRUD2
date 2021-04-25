@@ -7,17 +7,26 @@ const handlebars = require('express-handlebars');
 const { urlencoded } = require('body-parser');
 const app = express();
 const urlencodeParser=bodyParser.urlencoded({extended:false});
-const sql=mysql.createConnection({
+//const sql=mysql.createConnection({
+const sql=mysql.createPool({
     host:'localhost',
     user:'root',
     password:'123456',
-    //database: 'nodejs'
-    port:3306
+    database: 'nodejs'
+    //port:3306
 });
 
-sql.query("use nodejs",function(error, results, fields){ //use database
-    if (error) console.log(error.message); //throw error;
-});
+
+//sql.query("use nodejs",function(error, results, fields){ //use database //usando o mysql.createConnection
+//    if (error) console.log(error.message); //throw error;
+//});
+
+//sql.getConnection(function(error, connection){
+//    connection.query("use nodejs",function(error, results, fields){ //use database //usando o mysql.createConnection
+//        if (error) console.log(error.message); //throw error;
+//    });   
+//});
+
 
 //Template engine
 app.engine("handlebars", handlebars({defaultLayout:'main'}));
@@ -61,12 +70,22 @@ app.get("/inserir", function(req, res){
 app.get("/select/:id?", function(req, res){
     if (!req.params.id) {
         //res.send("Exite");
-        sql.query("select * from user order by name", function(error, results, fields){
-            res.render("select", {data:results});
+        sql.getConnection(function(error, connection){
+            connection.query("select * from user order by name", function(error, results, fields){
+                if (error) {
+                    console.log(error.message); //throw error;
+                }
+                res.render("select", {data:results});
+            });
         });
     } else {
-        sql.query("select * from user where id=? order by name",[req.params.id], function(error, results, fields){
-            res.render("select", {data:results});
+        sql.getConnection(function(error, connection){
+            connection.query("select * from user where id=? order by name",[req.params.id], function(error, results, fields){
+                if (error) {
+                    console.log(error.message); //throw error;
+                }
+                res.render("select", {data:results});
+            });
         });
     }
     //res.render("select");
@@ -76,27 +95,45 @@ app.post("/controllerForm", urlencodeParser, function(req, res){
     //res.render("inserir");
     //console.log(req.body.name);
     //console.log([req.body.id, req.body.name, req.body.age]);
-    sql.query('insert into user values(?,?,?)',[req.body.id, req.body.name, req.body.age],function(error, results, fields){
-        if (error) console.log(error.message); //throw error;
-    } );
+    sql.getConnection(function(error, connection){
+        connection.query('insert into user values(?,?,?)',[req.body.id, req.body.name, req.body.age],function(error, results, fields){
+            if (error) {
+                console.log(error.message); //throw error;
+            }
+        });
+    });
     res.render("controllerForm");
 })
 app.get('/deletar/:id', function(req, res){
-    sql.query("delete from user where id=?",[req.params.id]);
-    res.render("deletar");
+    sql.getConnection(function(error, connection){
+        connection.query("delete from user where id=?",[req.params.id]);
+        if (error) {
+            console.log(error.message); //throw error;
+        }
+        res.render("deletar");
+    });
 });
 
 app.get("/update/:id", function(req,res){
-    sql.query("select * from user where id=?", [req.params.id], function(error, results, fields){
-        //console.log({id:results[0].id,name:results[0].name,age:results[0].age});
-        res.render("update",{id:results[0].id,name:results[0].name,age:results[0].age});        
+    sql.getConnection(function(error, connection){
+        connection.query("select * from user where id=?", [req.params.id], function(error, results, fields){            
+            if (error) {
+                console.log(error.message); //throw error;
+            }
+            //console.log({id:results[0].id,name:results[0].name,age:results[0].age});
+            res.render("update",{id:results[0].id,name:results[0].name,age:results[0].age});        
+        });
     });
 });
 
 app.post("/controllerUpdate", urlencodeParser, function(req,res){
-    //console.log([req.body.name, req.body.age, req.body.id]);
-    sql.query("update user set name=?, age=? where id=?",[req.body.name, req.body.age, req.body.id]);
-    res.render("controllerUpdate");
+    sql.getConnection(function(error, connection){
+        connection.query("update user set name=?, age=? where id=?",[req.body.name, req.body.age, req.body.id]);
+        if (error) {
+            console.log(error.message); //throw error;
+        }
+        res.render("controllerUpdate");
+    });
 });
 
 //start server
