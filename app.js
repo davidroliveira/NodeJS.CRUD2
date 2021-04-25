@@ -5,6 +5,18 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const handlebars = require('express-handlebars');
 const app = express();
+const urlencodeParser=bodyParser.urlencoded({extended:false});
+const sql=mysql.createConnection({
+    host:'localhost',
+    user:'root',
+    password:'123456',
+    //database: 'nodejs'
+    port:3306
+});
+
+sql.query("use nodejs",function(error, results, fields){ //use database
+    if (error) console.log(error.message); //throw error;
+});
 
 //Template engine
 app.engine("handlebars", handlebars({defaultLayout:'main'}));
@@ -37,6 +49,20 @@ app.get("/style", function(req, res){
 app.get("/", function (req, res){
     res.render('index'); 
 });
+
+app.get("/inserir", function(req, res){
+    res.render("inserir");
+})
+
+app.post("/controllerForm", urlencodeParser, function(req, res){
+    //res.render("inserir");
+    //console.log(req.body.name);
+    console.log([req.body.id, req.body.name, req.body.age]);
+    sql.query('insert into user values(?,?,?)',[req.body.id, req.body.name, req.body.age],function(error, results, fields){
+        if (error) console.log(error.message); //throw error;
+    } );
+    res.render("controllerForm");
+})
 
 //start server
 app.listen(3000, function(req, res) {
